@@ -1,4 +1,4 @@
-@import "src/styles/partials/theme";
+@import 'src/styles/partials/theme';
 
 .wrapper {
   background-color: $background-dark-0;
@@ -38,6 +38,12 @@
   border-radius: 10px;
   word-break: break-all;
   text-align: center;
+  color: $white;
+  transition: color $transition-delay;
+}
+
+:global(.light_theme) .category {
+  color: $black;
 }
 
 .completedWrapper {

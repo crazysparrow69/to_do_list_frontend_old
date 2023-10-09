@@ -1,8 +1,8 @@
-import { InputHTMLAttributes, SetStateAction, Dispatch, FC } from "react";
+import { InputHTMLAttributes, SetStateAction, Dispatch, FC } from 'react';
 
-import taskAPI from "../../../api/taskAPI";
+import taskAPI from '../../../api/taskAPI';
 
-import styles from "./Checkbox.module.scss";
+import styles from './Checkbox.module.scss';
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   isChecked: boolean;
@@ -11,6 +11,7 @@ interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   isRounded?: boolean;
   isForChangeCompletedStatus?: boolean;
   id?: string;
+  updateTaskStatus?: (id: string, isCompleted: boolean) => void;
 }
 
 export const Checkbox: FC<CheckboxProps> = ({
@@ -20,6 +21,7 @@ export const Checkbox: FC<CheckboxProps> = ({
   isRounded,
   isForChangeCompletedStatus,
   id,
+  updateTaskStatus,
 }) => {
   return (
     <label
@@ -36,10 +38,11 @@ export const Checkbox: FC<CheckboxProps> = ({
             const toggle = async () => {
               try {
                 const result = await taskAPI.edittask({
-                  _id: id || "",
+                  _id: id || '',
                   isCompleted: !isChecked,
                 });
-                if (result.status === "success") setIsChecked((prev) => !prev);
+                if (result.status === 'success') setIsChecked((prev) => !prev);
+                if (updateTaskStatus) updateTaskStatus(id || '', !isChecked);
               } catch (e) {
                 console.log(e);
               }

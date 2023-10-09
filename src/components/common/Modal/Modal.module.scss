@@ -1,4 +1,4 @@
-@import "src/styles/partials/theme";
+@import 'src/styles/partials/theme';
 
 .modalActive,
 .modal {
@@ -62,11 +62,12 @@
 :global(.light_theme) .modalContentActive,
 .modalContent {
   background-color: $gray-600;
-}
-.close {
-  color: $black;
 
-  &:hover {
-    color: $error-200;
+  .close {
+    color: $black;
+
+    &:hover {
+      color: $error-200;
+    }
   }
 }

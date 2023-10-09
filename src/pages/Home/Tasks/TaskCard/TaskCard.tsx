@@ -1,20 +1,20 @@
-import { useState, Dispatch, SetStateAction } from "react";
-import { toast } from "react-toastify";
-import { useTranslation } from "react-i18next";
+import { useState, Dispatch, SetStateAction } from 'react';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
-import { Task, getTask } from "../../../../api/taskAPI";
-import { humaniseDate, truncate } from "../../../../helpers/string";
-import { Checkbox } from "../../../../components/common/Checkbox/Checkbox";
+import { Task, getTask } from '../../../../api/taskAPI';
+import { humaniseDate, truncate } from '../../../../helpers/string';
+import { Checkbox } from '../../../../components/common/Checkbox/Checkbox';
 
-import styles from "./TaskCard.module.scss";
+import styles from './TaskCard.module.scss';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPencil,
   faTrash,
   faShare,
   faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 interface taskProps {
   task: Task;
@@ -36,6 +36,7 @@ interface taskProps {
   taskFetchingParams: getTask;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   length?: number;
+  updateTaskStatus: (id: string, isCompleted: boolean) => void;
 }
 
 const TaskCard = ({
@@ -49,6 +50,7 @@ const TaskCard = ({
   fetchTasks,
   taskFetchingParams,
   setCurrentPage,
+  updateTaskStatus,
   length,
 }: taskProps) => {
   const {
@@ -84,6 +86,7 @@ const TaskCard = ({
           setIsChecked={setIsCompleted}
           isRounded
           id={_id}
+          updateTaskStatus={updateTaskStatus}
         />
       </div>
       <div className={styles.categoriesWrapper}>
@@ -104,19 +107,21 @@ const TaskCard = ({
       <div className={styles.links}>
         {links && links.length > 0 && (
           <p className={styles.link}>
-            {t("linksAttacked")}: {links.length}
+            {t('linksAttacked')}: {links.length}
           </p>
         )}
       </div>
 
       {deadline && (
-        <p className={styles.deadline}>{t("deadline")} {humaniseDate(deadline)}</p>
+        <p className={styles.deadline}>
+          {t('deadline')} {humaniseDate(deadline)}
+        </p>
       )}
       {sharedWith &&
-        sharedWith[0] !== "already shared" &&
+        sharedWith[0] !== 'already shared' &&
         sharedWith.length > 0 && (
           <div className={styles.username}>
-            {t("sharedWith")}: {sharedWith.length}
+            {t('sharedWith')}: {sharedWith.length}
           </div>
         )}
       <div className={styles.icons}>
@@ -162,7 +167,7 @@ const TaskCard = ({
             e.stopPropagation();
           }}
         />
-        <FontAwesomeIcon
+        {/* <FontAwesomeIcon
           color="black"
           data-testid="share-icon"
           fontSize="15px"
@@ -183,7 +188,7 @@ const TaskCard = ({
             setTaskSharing(true);
             e.stopPropagation();
           }}
-        />
+        /> */}
       </div>
     </div>
   );

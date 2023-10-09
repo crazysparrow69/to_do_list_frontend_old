@@ -1,21 +1,21 @@
-import { useState, Dispatch, SetStateAction, FC } from "react";
-import { useTranslation } from "react-i18next";
+import { useState, Dispatch, SetStateAction, FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import Button from "../../../../components/common/Button/Button";
-import Preloader from "../../../../components/Preloader/Preloader";
-import Categories from "../../FiltersBar/Categories/Categories";
-import { Input } from "../../../../components/common/Input/Input";
-import { Checkbox } from "../../../../components/common/Checkbox/Checkbox";
-import { TextArea } from "../../../../components/common/TextArea/TextArea";
-import { useAppSelector } from "../../../../hooks";
-import { selectProfile } from "../../../../redux/slices/auth/selectors";
-import { Status } from "../../../../types";
-import taskAPI, { Task, getTask } from "../../../../api/taskAPI";
+import Button from '../../../../components/common/Button/Button';
+import Preloader from '../../../../components/Preloader/Preloader';
+import Categories from '../../FiltersBar/Categories/Categories';
+import { Input } from '../../../../components/common/Input/Input';
+import { Checkbox } from '../../../../components/common/Checkbox/Checkbox';
+import { TextArea } from '../../../../components/common/TextArea/TextArea';
+import { useAppSelector } from '../../../../hooks';
+import { selectProfile } from '../../../../redux/slices/auth/selectors';
+import { Status } from '../../../../types';
+import taskAPI, { Task, getTask } from '../../../../api/taskAPI';
 
-import styles from "./TaskForm.module.scss";
+import styles from './TaskForm.module.scss';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
 
 interface TaskFormProps {
   toggleActive: Dispatch<SetStateAction<boolean>>;
@@ -45,23 +45,25 @@ const TaskForm: FC<TaskFormProps> = ({ toggleActive, childProps }) => {
   const { t } = useTranslation();
 
   const [status, setStatus] = useState(Status.SUCCESS);
-  const [taskError, setTaskError] = useState("");
-  const [title, setTittle] = useState(prevTitle || "");
-  const [description, setDescription] = useState(prevDescription || "");
+  const [taskError, setTaskError] = useState('');
+  const [title, setTittle] = useState(prevTitle || '');
+  const [description, setDescription] = useState(prevDescription || '');
   const [categories, setCategories] = useState(
     prevCategories?.map((el) => el._id) || []
   );
   const [hasDeadline, setHasDeadline] = useState(!!prevDeadline);
-  const [deadline, setDeadline] = useState(prevDeadline || "");
+  const [deadline, setDeadline] = useState(prevDeadline || '');
   const [isCompleted, setIsCompleted] = useState(prevIscompleted || false);
   const [links, setLinks] = useState([...(prevLinks || [])]);
 
-  const userId = useAppSelector(selectProfile)?._id || "";
+  const userId = useAppSelector(selectProfile)?._id || '';
 
   const submit = async () => {
     setStatus(Status.LOADING);
     let payload = { title, description, links: links || [] };
-    if (hasDeadline && deadline) payload = Object.assign(payload, { deadline });
+    payload = Object.assign(payload, {
+      deadline: hasDeadline ? deadline : null,
+    });
     if (categories.length > 0)
       payload = Object.assign(payload, {
         categories,
@@ -74,7 +76,7 @@ const TaskForm: FC<TaskFormProps> = ({ toggleActive, childProps }) => {
       : await taskAPI.addtask({ user: userId, ...payload });
     const { message, status } = result;
     setStatus(status);
-    setTaskError(message || "");
+    setTaskError(message || '');
     if (status === Status.SUCCESS) {
       if (!_id && length === 10) {
         setCurrentPage((prev) => {
@@ -106,9 +108,14 @@ const TaskForm: FC<TaskFormProps> = ({ toggleActive, childProps }) => {
             activeCategories={categories}
             setActiveCategories={setCategories}
           />
-          <Input title={t("title")} value={title} setValue={setTittle} type="text" />
+          <Input
+            title={t('title')}
+            value={title}
+            setValue={setTittle}
+            type="text"
+          />
           <TextArea
-            title={t("description")}
+            title={t('description')}
             value={description}
             setValue={setDescription}
           />
@@ -116,13 +123,12 @@ const TaskForm: FC<TaskFormProps> = ({ toggleActive, childProps }) => {
             <Checkbox
               isChecked={hasDeadline}
               setIsChecked={setHasDeadline}
-              label={t("taskHasDeadline")}
+              label={t('taskHasDeadline')}
             />
             {links.map((link, index) => (
-              <div className={styles.linkRow}>
+              <div className={styles.linkRow} key={index}>
                 <Input
-                  key={index}
-                  title={t("link")}
+                  title={t('link')}
                   value={link}
                   setValue={(newLink: any) => {
                     setLinks((prev) =>
@@ -154,14 +160,14 @@ const TaskForm: FC<TaskFormProps> = ({ toggleActive, childProps }) => {
             <Checkbox
               isChecked={isCompleted}
               setIsChecked={setIsCompleted}
-              label={t("taskCompleted")}
+              label={t('taskCompleted')}
             />
           </div>
 
           <div className={styles.actions}>
-            <Button text={t("cancel")} callback={cancel} class="cancel" />
+            <Button text={t('cancel')} callback={cancel} class="cancel" />
             <Button
-              text={t("submit")}
+              text={t('submit')}
               callback={submit}
               class="submit"
               disabled={description.length < 3 || title.length < 3}
