@@ -53,8 +53,6 @@ const Tasks: FC<TaskProps> = ({
   const prevDeadline = usePrevious(deadline);
   const prevCategories = usePrevious(categories);
 
-  console.log(Tasks);
-
   const updateTaskStatus = (id: string, isCompleted: boolean) => {
     const updatedTasks = Tasks.map((el) =>
       el._id === id ? { ...el, isCompleted } : el
